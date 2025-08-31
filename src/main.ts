@@ -34,3 +34,24 @@ export * from './WelstoryMeal'
  * @see {@link WelstoryMealMenu}
  */
 export type * from './WelstoryMealMenu'
+
+/**
+ * Re-export utility functions and types
+ * @see {@link generateUUID}
+ * @see {@link universalFetch}
+ * @see {@link HttpResponse}
+ * @see {@link HttpRequestOptions}
+ */
+export * from './utils'
+
+/**
+ * Re-export API types and type guards
+ * @see {@link RawRestaurantData}
+ * @see {@link RestaurantSearchResponse}
+ * @see {@link MealListResponse}
+ * @see {@link MealNutrientResponse}
+ * @see {@link isValidRestaurantData}
+ * @see {@link isValidMealData}
+ */
+export type * from './ApiTypes'
+export { isValidRestaurantData, isValidMealData } from './ApiTypes'

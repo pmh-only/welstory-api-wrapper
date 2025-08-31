@@ -6,6 +6,7 @@ import { Endpoints } from './Endpoints'
 import { WelstoryClient } from './WelstoryClient'
 import { WelstoryMealMenu } from './WelstoryMealMenu'
 import { WelstoryRestaurant } from './WelstoryRestaurant'
+import { type MealNutrientResponse } from './ApiTypes'
 
 /**
  * Represents a meal offering at a Welstory restaurant.
@@ -77,12 +78,12 @@ export class WelstoryMeal {
    * @throws Error if retrieving meal menu fails
    */
   public async listMealMenus (): Promise<WelstoryMealMenu[]> {
-    const response = await this.client.request(Endpoints.LIST_MEAL_NUTRIENT(this.date, this.mealTimeId, this.hallNo, this.menuCourseType, this.restaurant.id), {
+    const response = await this.client.request<MealNutrientResponse>(Endpoints.LIST_MEAL_NUTRIENT(this.date, this.mealTimeId, this.hallNo, this.menuCourseType, this.restaurant.id), {
       headers: {
         Cookie: `cafeteriaActiveId=${this.restaurant.id}`
       }
     }).then(async (res) => await res.json())
-      .catch((err) => err) as any
+      .catch((err: Error) => err)
 
     if (response instanceof Error) {
       throw new Error(`Failed to list meal menu: ${response.message}`)
@@ -90,7 +91,7 @@ export class WelstoryMeal {
 
     return response
       ?.data
-      ?.map?.((menu: any) => ({
+      ?.map?.(menu => ({
         name: menu.menuName,
         isMain: menu.typicalMenu === 'Y',
         calorie: menu.kcal,

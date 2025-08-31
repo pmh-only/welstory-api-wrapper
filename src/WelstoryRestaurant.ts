@@ -5,6 +5,12 @@
 import { Endpoints } from './Endpoints'
 import { WelstoryClient } from './WelstoryClient'
 import { WelstoryMeal } from './WelstoryMeal'
+import {
+  type RegisteredRestaurantsResponse,
+  type MealTimeResponse,
+  type MealListResponse,
+  isValidMealData
+} from './ApiTypes'
 
 /**
  * Represents a restaurant in the Welstory system.
@@ -41,15 +47,15 @@ export class WelstoryRestaurant {
    * @throws Error if the check fails
    */
   public async checkIsRegistered (): Promise<boolean> {
-    const response = await this.client.request(Endpoints.LIST_MY_RESTAURANT)
+    const response = await this.client.request<RegisteredRestaurantsResponse>(Endpoints.LIST_MY_RESTAURANT)
       .then(async (res) => await res.json())
-      .catch((err) => err) as any
+      .catch((err: Error) => err)
 
     if (response instanceof Error) {
       throw new Error(`Failed to check if restaurant is registered: ${response.message}`)
     }
 
-    return (response?.data?.filter?.((r: any) => r.restaurantId === this.id)?.length ?? 0) > 0
+    return (response?.data?.filter?.(r => r.restaurantId === this.id)?.length ?? 0) > 0
   }
 
   /**
@@ -121,12 +127,12 @@ export class WelstoryRestaurant {
    * @throws Error if listing meal times fails
    */
   public async listMealTimes (): Promise<Array<{ id: string, name: string }>> {
-    const response = await this.client.request(Endpoints.LIST_MEAL_TIME, {
+    const response = await this.client.request<MealTimeResponse>(Endpoints.LIST_MEAL_TIME, {
       headers: {
         Cookie: `cafeteriaActiveId=${this.id}`
       }
     }).then(async (res) => await res.json())
-      .catch((err) => err) as any
+      .catch((err: Error) => err)
 
     if (response instanceof Error) {
       throw new Error(`Failed to list meal times: ${response.message}`)
@@ -134,7 +140,7 @@ export class WelstoryRestaurant {
 
     return response
       ?.data
-      ?.map?.((time: any) => ({
+      ?.map?.(time => ({
         id: time.code,
         name: time.codeNm
       })) ?? []
@@ -148,22 +154,17 @@ export class WelstoryRestaurant {
    * @throws Error if listing meals fails or data format is invalid
    */
   public async listMeal (date: number, mealTimeId: string): Promise<WelstoryMeal[]> {
-    const response = await this.client.request(Endpoints.LIST_MEAL(date, mealTimeId, this.id))
+    const response = await this.client.request<MealListResponse>(Endpoints.LIST_MEAL(date, mealTimeId, this.id))
       .then(async (res) => await res.json())
-      .catch((err) => err) as any
+      .catch((err: Error) => err)
 
     if (response instanceof Error) {
       throw new Error(`Failed to list meal: ${response.message}`)
     }
 
-    return response.data.mealList.map((meal: any) => {
-      if (typeof meal.hallNo !== 'string' ||
-          typeof meal.menuName !== 'string' ||
-          typeof meal.courseTxt !== 'string' ||
-          typeof meal.menuCourseType !== 'string' ||
-          typeof meal.photoUrl !== 'string' ||
-          typeof meal.photoCd !== 'string') {
-        throw new Error('Invalid restaurant data format: ' + JSON.stringify(meal))
+    return response.data.mealList.map((meal) => {
+      if (!isValidMealData(meal)) {
+        throw new Error('Invalid meal data format: ' + JSON.stringify(meal))
       }
 
       return new WelstoryMeal(
@@ -175,9 +176,9 @@ export class WelstoryRestaurant {
         meal.menuName,
         meal.courseTxt,
         meal.menuCourseType,
-        meal.setMenuName,
-        meal.subMenuTxt,
-        `${meal.photoUrl as string}${meal.photoCd as string}`
+        meal.setMenuName ?? null,
+        meal.subMenuTxt ?? null,
+        `${meal.photoUrl}${meal.photoCd}`
       )
     })
   }

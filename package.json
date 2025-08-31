@@ -8,8 +8,10 @@
   "exports": {
     ".": {
       "types": "./dist/types/main.d.ts",
+      "browser": "./dist/esm/main.js",
+      "import": "./dist/esm/main.js",
       "require": "./dist/cjs/main.js",
-      "import": "./dist/esm/main.js"
+      "default": "./dist/esm/main.js"
     }
   },
   "scripts": {
@@ -22,8 +24,18 @@
   "keywords": [
     "welstory",
     "api",
-    "wrapper"
+    "wrapper",
+    "typescript",
+    "node",
+    "browser",
+    "universal",
+    "cafeteria",
+    "samsung"
   ],
+  "engines": {
+    "node": ">=14"
+  },
+  "sideEffects": false,
   "author": "Minhyeok Park <pmh_only@pmh.codes>",
   "license": "MIT",
   "packageManager": "pnpm@10.14.0",
@@ -35,8 +47,13 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "optionalDependencies": {
     "undici": "^7.13.0"
+  },
+  "browser": {
+    "undici": false
   },
   "ts-standard": {
     "ignore": [

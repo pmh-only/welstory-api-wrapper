@@ -2,12 +2,17 @@
  * @fileoverview Main client class for interacting with the Welstory Plus API.
  */
 
-import { randomUUID } from 'node:crypto'
 import { WelstoryClientLoginOptions, WelstoryClientOptions, WelstoryUserInfo } from './WelstoryClientTypes'
 import { Endpoints } from './Endpoints'
-import { fetch, RequestInit, Response } from 'undici'
 import { decode } from 'jsonwebtoken'
 import { WelstoryRestaurant } from './WelstoryRestaurant'
+import { generateUUID, universalFetch, type HttpResponse } from './utils'
+import {
+  type RestaurantSearchResponse,
+  type SessionRefreshResponse,
+  type JwtPayload,
+  isValidRestaurantData
+} from './ApiTypes'
 
 /**
  * Main client class for interacting with the Welstory Plus API.
@@ -41,7 +46,7 @@ export class WelstoryClient {
    */
   constructor (options: WelstoryClientOptions | undefined = {}) {
     this.baseUrl = options.baseUrl ?? 'https://welplus.welstory.com/'
-    this.deviceId = options.deviceId ?? randomUUID()
+    this.deviceId = options.deviceId ?? generateUUID()
   }
 
   /**
@@ -50,10 +55,10 @@ export class WelstoryClient {
    * @param options - Optional request configuration
    * @returns Promise resolving to the HTTP response
    */
-  public async request (endpoint: string, options?: RequestInit): Promise<Response> {
+  public async request<T = unknown> (endpoint: string, options: { method?: string, headers?: Record<string, string>, body?: string } = {}): Promise<HttpResponse<T>> {
     const url = new URL(endpoint, this.baseUrl)
 
-    return await fetch(url.toString(), {
+    return await universalFetch<T>(url.toString(), {
       ...options,
       headers: {
         'User-Agent': 'Welplus',
@@ -63,7 +68,7 @@ export class WelstoryClient {
             ? { Authorization: this.accessToken }
             : {}),
 
-        ...options?.headers
+        ...options.headers
       }
     })
   }
@@ -77,7 +82,7 @@ export class WelstoryClient {
    * @throws Error if login fails or no access token is received
    */
   public async login (options: WelstoryClientLoginOptions): Promise<WelstoryUserInfo> {
-    const response = await this.request(Endpoints.LOGIN, {
+    const response = await this.request<WelstoryUserInfo>(Endpoints.LOGIN, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'X-Autologin': 'N'
@@ -97,7 +102,7 @@ export class WelstoryClient {
 
     this.accessToken = accessToken
 
-    return await response.json() as WelstoryUserInfo
+    return await response.json()
   }
 
   /**
@@ -106,9 +111,9 @@ export class WelstoryClient {
    * @throws Error if session refresh fails
    */
   public async refreshSession (): Promise<number> {
-    const response = await this.request(Endpoints.SESSION_REFRESH)
+    const response = await this.request<SessionRefreshResponse>(Endpoints.SESSION_REFRESH)
     const responseBody = await response.json()
-      .catch(() => undefined) as { data?: string } | undefined
+      .catch(() => undefined)
 
     if (!response.ok || responseBody === undefined) {
       throw new Error(`Failed to refresh session: ${response.statusText}, response: ${JSON.stringify(await response.text())}`)
@@ -119,7 +124,11 @@ export class WelstoryClient {
     }
 
     this.accessToken = responseBody.data
-    const tokenPayload = decode(this.accessToken) as any
+    const tokenPayload = decode(this.accessToken) as JwtPayload | null
+
+    if (tokenPayload === null || typeof tokenPayload.exp !== 'number') {
+      throw new Error('Invalid JWT token received during session refresh')
+    }
 
     return tokenPayload.exp * 1000 - Date.now() - 30 * 1000
   }
@@ -133,9 +142,9 @@ export class WelstoryClient {
    * @throws Error if search fails or response format is invalid
    */
   public async searchRestaurant (searchQuery: string): Promise<WelstoryRestaurant[]> {
-    const response = await this.request(Endpoints.SEARCH_RESTAURANT(searchQuery))
-      .then(async (res) => await res.json() as any)
-      .catch((err) => err)
+    const response = await this.request<RestaurantSearchResponse>(Endpoints.SEARCH_RESTAURANT(searchQuery))
+      .then(async (res) => await res.json())
+      .catch((err: Error) => err)
 
     if (response instanceof Error) {
       throw new Error(`Failed to search restaurant: ${response.message}`)
@@ -145,10 +154,8 @@ export class WelstoryClient {
       throw new Error('Invalid response format: ' + JSON.stringify(response))
     }
 
-    return response.data.map((restaurant: any) => {
-      if (typeof restaurant.restaurantCode !== 'string' ||
-          typeof restaurant.restaurantName !== 'string' ||
-          typeof restaurant.restaurantDesc !== 'string') {
+    return response.data.map((restaurant) => {
+      if (!isValidRestaurantData(restaurant)) {
         throw new Error('Invalid restaurant data format: ' + JSON.stringify(restaurant))
       }
 

@@ -8,27 +8,84 @@ A TypeScript/JavaScript library for interacting with the Samsung Welstory cafete
 npm install welstory-api-wrapper
 ```
 
+### Environment Compatibility
+
+This library works in all JavaScript/TypeScript environments:
+
+- ✅ **Node.js 14+** (with undici fallback for older versions)
+- ✅ **Node.js 18+** (uses built-in fetch)
+- ✅ **Modern Browsers** (uses built-in fetch)
+- ✅ **Bundlers** (webpack, Vite, Rollup, etc.)
+- ✅ **TypeScript** (full type definitions included)
+- ✅ **CommonJS & ES Modules** (dual package exports)
+- ✅ **Browser environments** (automatic polyfills)
+- ✅ **XMLHttpRequest fallback** (for environments without fetch)
+- ✅ **Node.js HTTP modules** (fallback for server environments)
+
+### Additional Setup for Older Environments
+
+For Node.js versions before 18, the library automatically uses `undici` as a fetch polyfill. If you're using Node.js 14-17, undici will be installed as an optional dependency.
+
+For browser environments that don't support fetch (very old browsers), you may need to include a fetch polyfill:
+
+```bash
+npm install whatwg-fetch
+```
+
 ## Quick Start
+
+### Node.js (CommonJS)
 
 ```javascript
 const { WelstoryClient } = require('welstory-api-wrapper')
 
 const client = new WelstoryClient()
-
-// Login with credentials
 await client.login({
   username: 'your_username',
   password: 'your_password'
 })
 
-// Search for restaurants
 const restaurants = await client.searchRestaurant('R5')
-console.log(`Found ${restaurants.length} restaurants`)
+```
 
-// Get meal information
-const restaurant = restaurants[0]
-const mealTimes = await restaurant.listMealTimes()
-const meals = await restaurant.listMeal(20250830, mealTimes[1].id)
+### Node.js/Browser (ES Modules)
+
+```javascript
+import { WelstoryClient } from 'welstory-api-wrapper'
+
+const client = new WelstoryClient()
+await client.login({
+  username: 'your_username',
+  password: 'your_password'
+})
+
+const restaurants = await client.searchRestaurant('R5')
+```
+
+### TypeScript
+
+```typescript
+import { WelstoryClient, WelstoryUserInfo } from 'welstory-api-wrapper'
+
+const client = new WelstoryClient()
+
+const userInfo: WelstoryUserInfo = await client.login({
+  username: 'your_username',
+  password: 'your_password'
+})
+
+const restaurants = await client.searchRestaurant('R5')
+```
+
+### Browser (via CDN or bundler)
+
+```html
+<script type="module">
+import { WelstoryClient } from './node_modules/welstory-api-wrapper/dist/esm/main.js'
+
+const client = new WelstoryClient()
+// Use the client...
+</script>
 ```
 
 ## Features
@@ -39,6 +96,8 @@ const meals = await restaurant.listMeal(20250830, mealTimes[1].id)
 - 📊 **Nutritional Data** - Access detailed nutritional information for meals
 - 🔄 **Session Refresh** - Automatic token refresh capabilities
 - 📱 **TypeScript Support** - Full TypeScript definitions included
+- 🌐 **Universal Compatibility** - Works in any JavaScript environment
+- 🔧 **Utility Functions** - Cross-platform UUID generation and HTTP requests
 
 ## API Documentation
 
@@ -324,6 +383,45 @@ const userInfo: WelstoryUserInfo = await client.login({
 
 const nutritionalData: WelstoryMealMenu[] = await meal.listMealMenus()
 ```
+
+## Utility Functions
+
+The library also exports utility functions that can be used independently:
+
+### generateUUID()
+
+Cross-platform UUID generation function.
+
+```typescript
+import { generateUUID } from 'welstory-api-wrapper'
+
+const id = generateUUID()
+console.log(id) // e.g., "123e4567-e89b-12d3-a456-426614174000"
+```
+
+### universalFetch(url, options)
+
+Cross-platform HTTP request function with multiple fallback strategies.
+
+```typescript
+import { universalFetch, type HttpResponse } from 'welstory-api-wrapper'
+
+const response: HttpResponse = await universalFetch('https://api.example.com/data', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ key: 'value' })
+})
+
+const data = await response.json()
+```
+
+**Fallback Strategy:**
+1. **Global fetch** (modern browsers, Node.js 18+)
+2. **Undici** (Node.js 14-17)  
+3. **XMLHttpRequest** (older browsers)
+4. **Node.js HTTP modules** (server environments)
 
 ## Contributing
 
