@@ -13,7 +13,6 @@ on:
         options:
           - npm
           - github
-          - jsr
           - all
 
 jobs:
@@ -87,6 +86,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && (github.event.inputs.registry == 'github' || github.event.inputs.registry == 'all'))
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -129,22 +131,3 @@ jobs:
 
       - name: Restore original package.json
         run: mv package.json.backup package.json
-
-  publish-jsr:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && (github.event.inputs.registry == 'jsr' || github.event.inputs.registry == 'all'))
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Deno
-        uses: denoland/setup-deno@v2
-        with:
-          deno-version: 'v2.x'
-
-      - name: Publish to JSR
-        run: deno publish

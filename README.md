@@ -10,24 +10,6 @@ A TypeScript/JavaScript library for interacting with the Samsung Welstory cafete
 npm install welstory-api-wrapper
 ```
 
-### From JSR (JavaScript Registry)
-
-```bash
-# Using Deno
-deno add @pmh-only/welstory-api-wrapper
-
-# Using npm
-npm install jsr:@pmh-only/welstory-api-wrapper
-
-# Using yarn
-yarn add jsr:@pmh-only/welstory-api-wrapper
-
-# Using pnpm
-pnpm add jsr:@pmh-only/welstory-api-wrapper
-
-# Using Bun
-bunx jsr add @pmh-only/welstory-api-wrapper
-```
 
 ### From GitHub Package Registry
 
@@ -49,7 +31,6 @@ npm install @pmh-only/welstory-api-wrapper --registry=https://npm.pkg.github.com
 
 This library works in all JavaScript/TypeScript environments:
 
-- ✅ **Deno** (native TypeScript support via JSR)
 - ✅ **Node.js 14+** (with undici fallback for older versions)
 - ✅ **Node.js 18+** (uses built-in fetch)
 - ✅ **Bun** (fast JavaScript runtime)
@@ -73,20 +54,6 @@ npm install whatwg-fetch
 
 ## Quick Start
 
-### Deno
-
-```typescript
-// From JSR (Recommended for Deno)
-import { WelstoryClient } from '@pmh-only/welstory-api-wrapper'
-
-const client = new WelstoryClient()
-await client.login({
-  username: 'your_username',
-  password: 'your_password'
-})
-
-const restaurants = await client.searchRestaurant('R5')
-```
 
 ### Node.js (CommonJS)
 
@@ -94,8 +61,6 @@ const restaurants = await client.searchRestaurant('R5')
 // From npm registry
 const { WelstoryClient } = require('welstory-api-wrapper')
 
-// From JSR
-const { WelstoryClient } = require('jsr:@pmh-only/welstory-api-wrapper')
 
 // From GitHub Package Registry
 const { WelstoryClient } = require('@pmh-only/welstory-api-wrapper')
@@ -115,8 +80,6 @@ const restaurants = await client.searchRestaurant('R5')
 // From npm registry
 import { WelstoryClient } from 'welstory-api-wrapper'
 
-// From JSR
-import { WelstoryClient } from 'jsr:@pmh-only/welstory-api-wrapper'
 
 // From GitHub Package Registry
 import { WelstoryClient } from '@pmh-only/welstory-api-wrapper'
@@ -136,8 +99,6 @@ const restaurants = await client.searchRestaurant('R5')
 // From npm registry
 import { WelstoryClient, WelstoryUserInfo } from 'welstory-api-wrapper'
 
-// From JSR (No compilation needed!)
-import { WelstoryClient, WelstoryUserInfo } from 'jsr:@pmh-only/welstory-api-wrapper'
 
 // From GitHub Package Registry
 import { WelstoryClient, WelstoryUserInfo } from '@pmh-only/welstory-api-wrapper'
@@ -502,8 +463,6 @@ Cross-platform UUID generation function.
 // From npm registry
 import { generateUUID } from 'welstory-api-wrapper'
 
-// From JSR (TypeScript source, no compilation!)
-import { generateUUID } from 'jsr:@pmh-only/welstory-api-wrapper'
 
 // From GitHub Package Registry
 import { generateUUID } from '@pmh-only/welstory-api-wrapper'
@@ -520,8 +479,6 @@ Cross-platform HTTP request function with multiple fallback strategies.
 // From npm registry
 import { universalFetch, type HttpResponse } from 'welstory-api-wrapper'
 
-// From JSR (TypeScript source, no compilation!)
-import { universalFetch, type HttpResponse } from 'jsr:@pmh-only/welstory-api-wrapper'
 
 // From GitHub Package Registry
 import { universalFetch, type HttpResponse } from '@pmh-only/welstory-api-wrapper'
@@ -659,21 +616,10 @@ const client: WelstoryClient = new WelstoryClient()
 
 The library is available via multiple CDN providers:
 
-### npm-based CDNs
+### CDN Providers
 - **jsDelivr**: `https://cdn.jsdelivr.net/npm/welstory-api-wrapper@latest/dist/esm/main.js`
 - **unpkg**: `https://unpkg.com/welstory-api-wrapper@latest/dist/esm/main.js`
 
-### JSR-based CDNs
-- **JSR CDN**: `https://jsr.io/@pmh-only/welstory-api-wrapper/0.1.0/src/main.ts`
-- **esm.sh**: `https://esm.sh/jsr/@pmh-only/welstory-api-wrapper@0.1.0`
-
-### Deno-specific
-```html
-<script type="module">
-  import { WelstoryClient } from 'https://jsr.io/@pmh-only/welstory-api-wrapper/0.1.0/src/main.ts'
-  // Works directly with TypeScript source!
-</script>
-```
 
 These CDNs update automatically when new versions are published, requiring no additional setup.
 
