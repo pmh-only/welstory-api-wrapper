@@ -94,7 +94,7 @@ export class WelstoryMeal {
       ?.map?.(menu => ({
         name: menu.menuName,
         isMain: menu.typicalMenu === 'Y',
-        calorie: menu.kcal,
+        calorie: parseFloat(menu.kcal.replace(/,/g, '')),
         carbohydrate: parseFloat(menu.totCho),
         sugar: parseFloat(menu.totSugar),
         fiber: parseFloat(menu.totFib),

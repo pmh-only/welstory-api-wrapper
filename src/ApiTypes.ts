@@ -168,7 +168,7 @@ export interface RawMealMenuData {
   /**
    * Caloric content in kcal.
    */
-  kcal: number
+  kcal: string
 
   /**
    * Total carbohydrate content in grams (as string).
