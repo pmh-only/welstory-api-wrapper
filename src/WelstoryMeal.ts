@@ -2,11 +2,11 @@
  * @fileoverview Meal information and menu details for the Welstory API.
  */
 
-import { Endpoints } from './Endpoints'
-import { WelstoryClient } from './WelstoryClient'
-import { WelstoryMealMenu } from './WelstoryMealMenu'
-import { WelstoryRestaurant } from './WelstoryRestaurant'
-import { type MealNutrientResponse } from './ApiTypes'
+import { Endpoints } from './Endpoints.js'
+import { WelstoryClient } from './WelstoryClient.js'
+import { WelstoryMealMenu } from './WelstoryMealMenu.js'
+import { WelstoryRestaurant } from './WelstoryRestaurant.js'
+import { type MealNutrientResponse } from './ApiTypes.js'
 
 /**
  * Represents a meal offering at a Welstory restaurant.

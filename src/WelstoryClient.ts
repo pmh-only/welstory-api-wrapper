@@ -2,17 +2,17 @@
  * @fileoverview Main client class for interacting with the Welstory Plus API.
  */
 
-import { WelstoryClientLoginOptions, WelstoryClientOptions, WelstoryUserInfo } from './WelstoryClientTypes'
-import { Endpoints } from './Endpoints'
+import { WelstoryClientLoginOptions, WelstoryClientOptions, WelstoryUserInfo } from './WelstoryClientTypes.js'
+import { Endpoints } from './Endpoints.js'
 import { decode } from 'jsonwebtoken'
-import { WelstoryRestaurant } from './WelstoryRestaurant'
-import { generateUUID, universalFetch, type HttpResponse } from './utils'
+import { WelstoryRestaurant } from './WelstoryRestaurant.js'
+import { generateUUID, universalFetch, type HttpResponse } from './utils.js'
 import {
   type RestaurantSearchResponse,
   type SessionRefreshResponse,
   type JwtPayload,
   isValidRestaurantData
-} from './ApiTypes'
+} from './ApiTypes.js'
 
 /**
  * Main client class for interacting with the Welstory Plus API.

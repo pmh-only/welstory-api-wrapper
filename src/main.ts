@@ -7,7 +7,7 @@
  * Re-export all WelstoryClient functionality
  * @see {@link WelstoryClient}
  */
-export * from './WelstoryClient'
+export * from './WelstoryClient.js'
 
 /**
  * Re-export all client types
@@ -15,25 +15,25 @@ export * from './WelstoryClient'
  * @see {@link WelstoryClientLoginOptions}
  * @see {@link WelstoryUserInfo}
  */
-export type * from './WelstoryClientTypes'
+export type * from './WelstoryClientTypes.js'
 
 /**
  * Re-export all restaurant functionality
  * @see {@link WelstoryRestaurant}
  */
-export * from './WelstoryRestaurant'
+export * from './WelstoryRestaurant.js'
 
 /**
  * Re-export all meal functionality
  * @see {@link WelstoryMeal}
  */
-export * from './WelstoryMeal'
+export * from './WelstoryMeal.js'
 
 /**
  * Re-export all meal menu types
  * @see {@link WelstoryMealMenu}
  */
-export type * from './WelstoryMealMenu'
+export type * from './WelstoryMealMenu.js'
 
 /**
  * Re-export utility functions and types
@@ -42,7 +42,7 @@ export type * from './WelstoryMealMenu'
  * @see {@link HttpResponse}
  * @see {@link HttpRequestOptions}
  */
-export * from './utils'
+export * from './utils.js'
 
 /**
  * Re-export API types and type guards
@@ -53,5 +53,5 @@ export * from './utils'
  * @see {@link isValidRestaurantData}
  * @see {@link isValidMealData}
  */
-export type * from './ApiTypes'
-export { isValidRestaurantData, isValidMealData } from './ApiTypes'
+export type * from './ApiTypes.js'
+export { isValidRestaurantData, isValidMealData } from './ApiTypes.js'

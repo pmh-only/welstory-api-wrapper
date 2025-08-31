@@ -1,6 +1,6 @@
 {
   "name": "welstory-api-wrapper",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "삼성웰스토리 구내식당 API TypeScript 라이브러리 (25년 기준 작동)",
   "main": "./dist/cjs/main.js",
   "module": "./dist/esm/main.js",

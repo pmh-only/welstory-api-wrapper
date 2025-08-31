@@ -2,15 +2,15 @@
  * @fileoverview Restaurant management functionality for the Welstory API.
  */
 
-import { Endpoints } from './Endpoints'
-import { WelstoryClient } from './WelstoryClient'
-import { WelstoryMeal } from './WelstoryMeal'
+import { Endpoints } from './Endpoints.js'
+import { WelstoryClient } from './WelstoryClient.js'
+import { WelstoryMeal } from './WelstoryMeal.js'
 import {
   type RegisteredRestaurantsResponse,
   type MealTimeResponse,
   type MealListResponse,
   isValidMealData
-} from './ApiTypes'
+} from './ApiTypes.js'
 
 /**
  * Represents a restaurant in the Welstory system.
