@@ -9,8 +9,6 @@
     "lib": ["esnext"],
     "types": ["node"],
 
-    "moduleResolution": "node",
-
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
