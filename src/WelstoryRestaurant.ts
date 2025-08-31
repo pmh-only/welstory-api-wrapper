@@ -1,15 +1,45 @@
+/**
+ * @fileoverview Restaurant management functionality for the Welstory API.
+ */
+
 import { Endpoints } from './Endpoints'
 import { WelstoryClient } from './WelstoryClient'
 import { WelstoryMeal } from './WelstoryMeal'
 
+/**
+ * Represents a restaurant in the Welstory system.
+ * Provides functionality for registration, meal time listing, and meal information retrieval.
+ * @class WelstoryRestaurant
+ */
 export class WelstoryRestaurant {
+  /**
+   * Creates a new WelstoryRestaurant instance.
+   * @param client - The WelstoryClient instance for API requests
+   * @param id - Unique restaurant identifier
+   * @param name - Restaurant name
+   * @param description - Restaurant description
+   */
   constructor (
     private readonly client: WelstoryClient,
+    /**
+     * Unique restaurant identifier.
+     */
     public readonly id: string,
+    /**
+     * Restaurant name.
+     */
     public readonly name: string,
+    /**
+     * Restaurant description.
+     */
     public readonly description: string
   ) {}
 
+  /**
+   * Checks if this restaurant is registered to the user's account.
+   * @returns Promise resolving to true if registered, false otherwise
+   * @throws Error if the check fails
+   */
   public async checkIsRegistered (): Promise<boolean> {
     const response = await this.client.request(Endpoints.LIST_MY_RESTAURANT)
       .then(async (res) => await res.json())
@@ -22,6 +52,11 @@ export class WelstoryRestaurant {
     return (response?.data?.filter?.((r: any) => r.restaurantId === this.id)?.length ?? 0) > 0
   }
 
+  /**
+   * Registers this restaurant to the user's account.
+   * @returns Promise that resolves when registration is complete
+   * @throws Error if restaurant is already registered or registration fails
+   */
   public async register (): Promise<void> {
     if (await this.checkIsRegistered()) {
       throw new Error(`Restaurant ${this.id} is already registered`)
@@ -50,6 +85,11 @@ export class WelstoryRestaurant {
     }
   }
 
+  /**
+   * Removes this restaurant from the user's registered restaurants.
+   * @returns Promise that resolves when unregistration is complete
+   * @throws Error if restaurant is not registered or unregistration fails
+   */
   public async unregister (): Promise<void> {
     if (!(await this.checkIsRegistered())) {
       throw new Error(`Restaurant ${this.id} is not registered`)
@@ -75,6 +115,11 @@ export class WelstoryRestaurant {
     }
   }
 
+  /**
+   * Lists available meal times for this restaurant.
+   * @returns Promise resolving to array of meal time objects with id and name
+   * @throws Error if listing meal times fails
+   */
   public async listMealTimes (): Promise<Array<{ id: string, name: string }>> {
     const response = await this.client.request(Endpoints.LIST_MEAL_TIME, {
       headers: {
@@ -95,6 +140,13 @@ export class WelstoryRestaurant {
       })) ?? []
   }
 
+  /**
+   * Lists meals available at this restaurant for a specific date and meal time.
+   * @param date - Date in YYYYMMDD number format
+   * @param mealTimeId - Meal time identifier
+   * @returns Promise resolving to array of available meals
+   * @throws Error if listing meals fails or data format is invalid
+   */
   public async listMeal (date: number, mealTimeId: string): Promise<WelstoryMeal[]> {
     const response = await this.client.request(Endpoints.LIST_MEAL(date, mealTimeId, this.id))
       .then(async (res) => await res.json())
