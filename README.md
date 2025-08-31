@@ -4,16 +4,55 @@ A TypeScript/JavaScript library for interacting with the Samsung Welstory cafete
 
 ## Installation
 
+### From npm Registry
+
 ```bash
 npm install welstory-api-wrapper
+```
+
+### From JSR (JavaScript Registry)
+
+```bash
+# Using Deno
+deno add @pmh-only/welstory-api-wrapper
+
+# Using npm
+npm install jsr:@pmh-only/welstory-api-wrapper
+
+# Using yarn
+yarn add jsr:@pmh-only/welstory-api-wrapper
+
+# Using pnpm
+pnpm add jsr:@pmh-only/welstory-api-wrapper
+
+# Using Bun
+bunx jsr add @pmh-only/welstory-api-wrapper
+```
+
+### From GitHub Package Registry
+
+```bash
+# Configure npm to use GitHub Package Registry for @pmh-only packages
+echo "@pmh-only:registry=https://npm.pkg.github.com" >> .npmrc
+
+# Install the package
+npm install @pmh-only/welstory-api-wrapper
+```
+
+Or using a one-time installation:
+
+```bash
+npm install @pmh-only/welstory-api-wrapper --registry=https://npm.pkg.github.com
 ```
 
 ### Environment Compatibility
 
 This library works in all JavaScript/TypeScript environments:
 
+- ✅ **Deno** (native TypeScript support via JSR)
 - ✅ **Node.js 14+** (with undici fallback for older versions)
 - ✅ **Node.js 18+** (uses built-in fetch)
+- ✅ **Bun** (fast JavaScript runtime)
 - ✅ **Modern Browsers** (uses built-in fetch)
 - ✅ **Bundlers** (webpack, Vite, Rollup, etc.)
 - ✅ **TypeScript** (full type definitions included)
@@ -34,10 +73,32 @@ npm install whatwg-fetch
 
 ## Quick Start
 
+### Deno
+
+```typescript
+// From JSR (Recommended for Deno)
+import { WelstoryClient } from '@pmh-only/welstory-api-wrapper'
+
+const client = new WelstoryClient()
+await client.login({
+  username: 'your_username',
+  password: 'your_password'
+})
+
+const restaurants = await client.searchRestaurant('R5')
+```
+
 ### Node.js (CommonJS)
 
 ```javascript
+// From npm registry
 const { WelstoryClient } = require('welstory-api-wrapper')
+
+// From JSR
+const { WelstoryClient } = require('jsr:@pmh-only/welstory-api-wrapper')
+
+// From GitHub Package Registry
+const { WelstoryClient } = require('@pmh-only/welstory-api-wrapper')
 
 const client = new WelstoryClient()
 await client.login({
@@ -51,7 +112,14 @@ const restaurants = await client.searchRestaurant('R5')
 ### Node.js/Browser (ES Modules)
 
 ```javascript
+// From npm registry
 import { WelstoryClient } from 'welstory-api-wrapper'
+
+// From JSR
+import { WelstoryClient } from 'jsr:@pmh-only/welstory-api-wrapper'
+
+// From GitHub Package Registry
+import { WelstoryClient } from '@pmh-only/welstory-api-wrapper'
 
 const client = new WelstoryClient()
 await client.login({
@@ -65,7 +133,14 @@ const restaurants = await client.searchRestaurant('R5')
 ### TypeScript
 
 ```typescript
+// From npm registry
 import { WelstoryClient, WelstoryUserInfo } from 'welstory-api-wrapper'
+
+// From JSR (No compilation needed!)
+import { WelstoryClient, WelstoryUserInfo } from 'jsr:@pmh-only/welstory-api-wrapper'
+
+// From GitHub Package Registry
+import { WelstoryClient, WelstoryUserInfo } from '@pmh-only/welstory-api-wrapper'
 
 const client = new WelstoryClient()
 
@@ -77,11 +152,42 @@ const userInfo: WelstoryUserInfo = await client.login({
 const restaurants = await client.searchRestaurant('R5')
 ```
 
-### Browser (via CDN or bundler)
+### Browser (via CDN)
+
+#### From jsDelivr (Recommended for production)
 
 ```html
 <script type="module">
-import { WelstoryClient } from './node_modules/welstory-api-wrapper/dist/esm/main.js'
+import { WelstoryClient } from 'https://cdn.jsdelivr.net/npm/welstory-api-wrapper@0.1.0/dist/esm/main.js'
+
+const client = new WelstoryClient()
+await client.login({
+  username: 'your_username',
+  password: 'your_password'
+})
+
+const restaurants = await client.searchRestaurant('R5')
+</script>
+```
+
+#### From unpkg (Alternative CDN)
+
+```html
+<script type="module">
+import { WelstoryClient } from 'https://unpkg.com/welstory-api-wrapper@0.1.0/dist/esm/main.js'
+
+const client = new WelstoryClient()
+// Use the client...
+</script>
+```
+
+#### Self-hosted CDN files
+
+Download CDN files from the [GitHub releases](https://github.com/pmh-only/welstory-api-wrapper/releases) and host them yourself:
+
+```html
+<script type="module">
+import { WelstoryClient } from './js/welstory-api-wrapper.min.js'
 
 const client = new WelstoryClient()
 // Use the client...
@@ -393,7 +499,14 @@ The library also exports utility functions that can be used independently:
 Cross-platform UUID generation function.
 
 ```typescript
+// From npm registry
 import { generateUUID } from 'welstory-api-wrapper'
+
+// From JSR (TypeScript source, no compilation!)
+import { generateUUID } from 'jsr:@pmh-only/welstory-api-wrapper'
+
+// From GitHub Package Registry
+import { generateUUID } from '@pmh-only/welstory-api-wrapper'
 
 const id = generateUUID()
 console.log(id) // e.g., "123e4567-e89b-12d3-a456-426614174000"
@@ -404,7 +517,14 @@ console.log(id) // e.g., "123e4567-e89b-12d3-a456-426614174000"
 Cross-platform HTTP request function with multiple fallback strategies.
 
 ```typescript
+// From npm registry
 import { universalFetch, type HttpResponse } from 'welstory-api-wrapper'
+
+// From JSR (TypeScript source, no compilation!)
+import { universalFetch, type HttpResponse } from 'jsr:@pmh-only/welstory-api-wrapper'
+
+// From GitHub Package Registry
+import { universalFetch, type HttpResponse } from '@pmh-only/welstory-api-wrapper'
 
 const response: HttpResponse = await universalFetch('https://api.example.com/data', {
   method: 'POST',
@@ -423,6 +543,109 @@ const data = await response.json()
 3. **XMLHttpRequest** (older browsers)
 4. **Node.js HTTP modules** (server environments)
 
+## CDN Usage
+
+### Available CDN Providers
+
+The library is available on multiple CDN providers for easy browser integration:
+
+| CDN Provider | URL Pattern | Notes |
+|--------------|-------------|-------|
+| **jsDelivr** | `https://cdn.jsdelivr.net/npm/welstory-api-wrapper@{version}/dist/esm/main.js` | ✅ Recommended for production |
+| **unpkg** | `https://unpkg.com/welstory-api-wrapper@{version}/dist/esm/main.js` | ✅ Good alternative |
+
+### Complete Browser Example
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Welstory API Demo</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Welstory Menu</h1>
+        <div id="output"></div>
+    </div>
+
+    <script type="module">
+        import { WelstoryClient } from 'https://cdn.jsdelivr.net/npm/welstory-api-wrapper@0.1.0/dist/esm/main.js'
+
+        async function loadMenu() {
+            const output = document.getElementById('output')
+            
+            try {
+                const client = new WelstoryClient()
+                
+                await client.login({
+                    username: 'your_username',
+                    password: 'your_password'
+                })
+                
+                const restaurants = await client.searchRestaurant('R5')
+                const restaurant = restaurants[0]
+                
+                if (restaurant) {
+                    const mealTimes = await restaurant.listMealTimes()
+                    const meals = await restaurant.listMeal(20250830, mealTimes[1].id)
+                    
+                    output.innerHTML = meals.map(meal => 
+                        `<div>
+                            <h3>${meal.name}</h3>
+                            <p>${meal.menuCourseName}</p>
+                            <img src="${meal.photoUrl}" alt="${meal.name}" style="max-width: 200px;">
+                        </div>`
+                    ).join('')
+                }
+            } catch (error) {
+                output.innerHTML = `<p>Error: ${error.message}</p>`
+            }
+        }
+
+        // Load menu when page loads
+        loadMenu()
+    </script>
+</body>
+</html>
+```
+
+### Legacy Browser Support
+
+For older browsers that don't support ES modules, use the CommonJS build:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/welstory-api-wrapper@0.1.0/dist/cjs/main.js"></script>
+<script>
+    const { WelstoryClient } = require('welstory-api-wrapper')
+    
+    const client = new WelstoryClient()
+    // Use the client...
+</script>
+```
+
+### TypeScript Support in Browser
+
+Include the type definitions for TypeScript support:
+
+```html
+<!-- For TypeScript projects -->
+<script type="importmap">
+{
+  "imports": {
+    "welstory-api-wrapper": "https://cdn.jsdelivr.net/npm/welstory-api-wrapper@0.1.0/dist/esm/main.js"
+  }
+}
+</script>
+
+<script type="module">
+import type { WelstoryClient, WelstoryUserInfo } from 'welstory-api-wrapper'
+import { WelstoryClient } from 'welstory-api-wrapper'
+
+const client: WelstoryClient = new WelstoryClient()
+</script>
+```
+
 ## Contributing
 
 1. Fork the repository
@@ -431,6 +654,28 @@ const data = await response.json()
 4. Add tests if applicable
 5. Run linting: `npm run lint`
 6. Submit a pull request
+
+## CDN Availability
+
+The library is available via multiple CDN providers:
+
+### npm-based CDNs
+- **jsDelivr**: `https://cdn.jsdelivr.net/npm/welstory-api-wrapper@latest/dist/esm/main.js`
+- **unpkg**: `https://unpkg.com/welstory-api-wrapper@latest/dist/esm/main.js`
+
+### JSR-based CDNs
+- **JSR CDN**: `https://jsr.io/@pmh-only/welstory-api-wrapper/0.1.0/src/main.ts`
+- **esm.sh**: `https://esm.sh/jsr/@pmh-only/welstory-api-wrapper@0.1.0`
+
+### Deno-specific
+```html
+<script type="module">
+  import { WelstoryClient } from 'https://jsr.io/@pmh-only/welstory-api-wrapper/0.1.0/src/main.ts'
+  // Works directly with TypeScript source!
+</script>
+```
+
+These CDNs update automatically when new versions are published, requiring no additional setup.
 
 ## Development
 
